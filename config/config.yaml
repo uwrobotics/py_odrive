@@ -1,1 +1,12 @@
 # Todo migrate reference on https://github.com/odriverobotics/ODrive/blob/master/tools/can_dbc_example.py
+# Jetson
+Drivetrain:
+- bustype: socketcan
+- channel: can0
+- bitrate: 500000
+
+# Linux laptop 
+# Drivetrain:
+# - bustype: slcan
+# - channel: /dev/ttyACM1
+# - bitrate: 500000

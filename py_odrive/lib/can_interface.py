@@ -1,22 +1,27 @@
-import can
 import os
+import multiprocessing
 
 # look into workers
-import multiprocessing
+import can
 import yaml
 
 # Final pr need to include proper unittesting and mocking
+# Impl typing in the system
 
 class CanDevice:
-    def __init__(self, can_device, status):
+    def __init__(self, can_device, 
+                 status = 'offline'):
         self.bus = can_device
-        self.status = status
+        self.toggle_status(status)
         
     def get_bus(self):
-        return self.can_device
+        return self.bus
     
-    def set_status(self, status):
-        self.status = status
+    def toggle_status(self, status = 'offline'):
+        if status == 'online':
+            self.status = status
+        else:
+            self.status = 'offline'
         
     def get_status(self):
         return self.status
@@ -29,7 +34,7 @@ class ProcessYaml:
         
     def get_result(self, attribute):
         if isinstance(self.content[attribute], list):
-            return self._list2dict(content[attribute])
+            return self._list2dict(self.content[attribute])
         else:
             return self.content[attribute]
     

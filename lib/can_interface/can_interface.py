@@ -1,6 +1,9 @@
 import can
 import os
 
+# look into workers
+import multiprocessing
+
 class CanDevice:
     def __init__(self, can_device, status):
         self.bus = can_device

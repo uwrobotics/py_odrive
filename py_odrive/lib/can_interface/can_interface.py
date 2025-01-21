@@ -3,9 +3,9 @@ import os
 
 # look into workers
 import multiprocessing
-
-# include final test is a submitting pr
 import yaml
+
+# Final pr need to include proper unittesting and mocking
 
 class CanDevice:
     def __init__(self, can_device, status):
@@ -20,6 +20,30 @@ class CanDevice:
         
     def get_status(self):
         return self.status
+
+
+
+class ProcessYaml:
+    def __init__(self, config_f):
+        self.read_config(config_f)
+        
+    def get_result(self, attribute):
+        if isinstance(self.content[attribute], list):
+            return self._list2dict(content[attribute])
+        else:
+            return self.content[attribute]
+    
+    # return lists of can device with properity
+    def read_config(self, config_f):
+        file = open(config_f, 'r')
+        self.yaml_obj = yaml.safe_load(file)
+            
+    # convert the list to dict type
+    def _list2dict(self, yaml_list):
+        dct = {}
+        for sub_dct in yaml_list:
+            dct.update(sub_dct)
+        return dct
 
 
 
@@ -49,24 +73,3 @@ class OdriveV3:
     
     
     
-class ProcessYaml:
-    def __init__(self, config_f):
-        self.read_config(config_f)
-        
-    def get_result(self, attribute):
-        if isinstance(self.content[attribute], list):
-            return self._list2dict(content[attribute])
-        else:
-            return self.content[attribute]
-    
-    # return lists of can device with properity
-    def read_config(self, config_f):
-        file = open(config_f, 'r')
-        self.yaml_obj = yaml.safe_load(file)
-            
-    # convert the list to dict type
-    def _list2dict(self, yaml_list):
-        dct = {}
-        for sub_dct in yaml_list:
-            dct.update(sub_dct)
-        return dct

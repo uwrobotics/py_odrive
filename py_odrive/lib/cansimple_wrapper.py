@@ -7,3 +7,4 @@
 
 
 #config file -> yaml for mapping read into each motor and name
+

@@ -70,7 +70,7 @@ class ProcessYaml:
         """
         self.read_config(config_file)
 
-    def get_config(self, key: str, device_name: Optional[str] = None, dct: Optional[dict] = None) -> Optional[any]:
+    def get_config(self, key: Optional[str] = None, device_name: Optional[str] = None, dct: Optional[dict] = None) -> Optional[any]:
         """
         Retrieves a configuration value based on the provided key.
 
@@ -85,6 +85,8 @@ class ProcessYaml:
         Raises:
             ValueError: If both `device_name` and `dct` are None or both are provided.
         """
+        if key is None and device_name is None and dct is None:
+            return self.yaml_obj
         if (dct is None) == (device_name is None):
             raise ValueError("Either `device_name` or `dct` must be provided, but not both.")
         if dct is None:

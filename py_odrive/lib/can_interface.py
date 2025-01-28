@@ -13,24 +13,35 @@ class OdriveV3:
         # - device lifetime (online, offline, not available, link retry)
         # - integrate LOG
         assert os.path.isfile(config_file), f"filepath:{config_file} does not exist"
-        self.devices_config = utils.ProcessYaml(config_file).get_config()
-        for device in self.devices_config:
-            device_config = self.devices_config.get_result(device)
+        self.devices_config = utils.ProcessYaml(config_file)
+        device_dct = self.devices_config.get_config()
+        self.buses = {}
+        self.buses_config = {}
+        for device in device_dct:
             try:
-                self.buses[device] =  utils.CanDevice(can.interface.Bus(bustype=device_config['bus_type'],
-                                                                        channel=device_config['channel'],
-                                                                        bitrate=device_config['bitrate']), 'Online')
+                self.buses[device] =  utils.CanDevice(can.interface.Bus(bustype=self.devices_config.get_config(key='bus_type',device_name=device),
+                                                                        channel=self.devices_config.get_config(key='channel',device_name=device),
+                                                                        bitrate=self.devices_config.get_config(key='bitrate',device_name=device)), 'Online')
             # Associate device mapping
-            except:
-                self.buses[device] =  CanDevice(None , 'offline')
+                self.buses_config[device] = self.devices_config.get_config(key='mapping',device_name=device)
+            except OSError:
+                self.buses[device] =  utils.CanDevice(None , 'offline')
+                
+    def get_device(self):
+        pass
 
-    def transmit(self, attribute, msg):
-        assert self.buses[attribute].get_status(), f'can device {self.buses[attribute]} is not online at the moment'
-        assert msg.msg_ready, f'Message to {attribute} is not prepared'
-        self.buses[attribute].send(msg.buf)
+    def transmit(self, device, msg):
+        assert self.buses[device].get_status(), f'can device {self.buses[device]} is not online at the moment'
+        assert msg.msg_ready, f'Message to {device} is not prepared'
+        self.buses[device].send(msg.buf)
         
-    # async listen 
-    def recv(self, can_bus):
+    def recv(self):
+        for bus in self.buses:
+            self._recv(bus):
+                
+        
+    # async listen private method
+    def _recv(self, can_bus):
         can_bus.recv()
         
     

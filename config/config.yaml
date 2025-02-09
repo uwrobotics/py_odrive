@@ -4,12 +4,12 @@ Drivetrain:
  channel: /dev/ttyACM0
  bitrate: 500000
  mapping:
-  FrontLeftMotor: axis1
-  MiddleLeftMotor: axis2
-  BackLeftMotor: axis3
-  FrontRightMotor: axis4
-  MiddleRightMotor: axis5
-  BackRightMotor: axis6
+  FrontLeftMotor: 1
+  MiddleLeftMotor: 2
+  BackLeftMotor: 3
+  FrontRightMotor: 4
+  MiddleRightMotor: 5
+  BackRightMotor: 6
 
 # Linux laptop 
 # Drivetrain2:

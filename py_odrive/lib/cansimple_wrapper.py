@@ -38,7 +38,8 @@ class CanWrapperEncode:
                     assert isinstance(payload[signal.name], int)
                 dct[signal.name] = payload[signal.name]
             except KeyError:
-                dct[signal.name] = 0
+                assert 0
+                # dct[signal.name] = 0
                 # log instance
         return msg.encode(dct)
     

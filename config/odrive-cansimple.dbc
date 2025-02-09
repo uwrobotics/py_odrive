@@ -43,6 +43,8 @@ BO_ 1 Heartbeat: 8 ODrive
  SG_ Axis_State : 32|8@1+ (1,0) [0|0] ""  Master
  SG_ Axis_Error : 0|32@1+ (1,0) [0|0] ""  Master
 
+BO_ 2 Estop: 0 Master
+
 BO_ 3 Get_Motor_Error: 8 ODrive
  SG_ Motor_Error : 0|32@1+ (1,0) [0|0] ""  Master
 

@@ -18,11 +18,20 @@ class CanWrapperEncode:
         self.encode_arbitration_id = lambda axis_id, msg_id: axis_id << 5 | msg_id
     
     def _encode(self, axis_id, cmd: str, payload: Optional[dict] = None, rtr: Optional[bool]=False):
+        '''
+        condition 1:
+            Set_Reboot / Estop
+        Condition 2:
+            Get odrive state
+        '''
         msg = self.db.get_message_by_name(cmd)
+        data = {}
         if msg.length == 0:
             assert payload is None
+        elif msg.receivers == {'Master'}:
+            assert rtr == True
         else:
-            data = self._encode_payload(msg, payload)
+            data = msg.encode(self._encode_payload(msg, payload))
         return can.Message(arbitration_id=self.encode_arbitration_id(axis_id, msg.frame_id), is_extended_id=False, is_remote_frame = rtr, data=data)
             
     def _encode_payload(self, msg, payload):
@@ -38,9 +47,9 @@ class CanWrapperEncode:
                     assert isinstance(payload[signal.name], int)
                 dct[signal.name] = payload[signal.name]
             except KeyError:
-                assert 0
+                raise ValueError
                 # dct[signal.name] = 0
                 # log instance
-        return msg.encode(dct)
+        return dct
     
     

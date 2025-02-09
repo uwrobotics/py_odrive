@@ -38,7 +38,7 @@ class OdriveEncode(CanWrapperEncode):
     def Set_Axis_State(self, joint, state):
         axis_id = self.joint2axis(joint)
         payload = {'Axis_Requested_State': state}
-        return self._encode(axis_id, 'Axis_Requested_State', payload=payload)
+        return self._encode(axis_id, 'Set_Axis_State', payload=payload)
     
     def Get_Encoder_Estimates(self, joint):
         axis_id = self.joint2axis(joint)

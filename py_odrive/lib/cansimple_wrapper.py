@@ -55,15 +55,20 @@ class CanWrapperEncode:
 
 
 class CanWrapperDecode:
+    '''
+    missing unittest
+    '''
     def __init__(self, dbc_filepath):
         self.db = cantools.database.load_file(dbc_filepath)
         self.get_axis_id = lambda buf: buf.arbitration_id >> 5
-        self.get_frame_id = lambda buf: buf.arbitration_id & 0x11111
+        self.get_frame_id = lambda buf: buf.arbitration_id&0b11111
         
     def decode_message(self, buf):
         '''
         return axis_id(int), frame_id(int), message(dict)
         '''
         axis_id = self.get_axis_id(buf)
+        print(buf.arbitration_id)
         frame_id = self.get_frame_id(buf)
+        print(frame_id)
         return axis_id, self.db.get_message_by_frame_id(frame_id), self.db.decode_message(frame_id, buf.data)

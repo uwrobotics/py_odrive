@@ -163,7 +163,7 @@ class OdriveDecode(CanWrapperDecode):
             assert mapping_config is not None
             self.axis = mapping_config
         self.axis_state = {}
-        self.encoder_info = {'Vel_Estimate': 0, 'Pos_Estimate': 0}
+        self.encoder_info = {}
             
     def get_axis_state(self):
         '''
@@ -190,35 +190,39 @@ class OdriveDecode(CanWrapperDecode):
         axis_id, cmd, payload = super().decode_message(buf)
         joint = self.axis2joint(axis_id)
         if cmd.name == 'Heartbeat':
-            msg = self.Heartbeat(joint, cmd, payload)
+            msg = self._Heartbeat(joint, cmd, payload)
             if msg != None:
                 return cmd.name, {str(joint): msg}
             else:
-                return None
+                return cmd.name, {str(joint): None}
         elif cmd.name == 'Get_Encoder_Estimates':
-            self.Get_Encoder_Estimates(payload)
-            return None
+            self._Get_Encoder_Estimates(joint, payload)
+            return cmd.name, {str(joint): None}
         elif cmd.name in ['Get_Motor_Error', 'Get_Encoder_Error', 'Get_Sensorless_Error', 'Get_Encoder_Count', 'Get_Iq', 'Get_Sensorless_Estimates', 'Get_Bus_Voltage_Current', 'Get_ADC_Voltage', 'Get_Controller_Error']:
             return cmd.name, {str(joint): payload}
         else: 
-            return None
+            return cmd.name, {str(joint): None}
             
-    def Heartbeat(self, axis_id, cmd, payload):
+    def _Heartbeat(self, axis_id, cmd, payload):
         for signal in cmd.signals:
             if signal.name == 'Axis_State':
                 self.axis_state[str(axis_id)] = payload['Axis_State']
-            elif payload[signal.name] == 0:
+            elif payload[signal.name] == 0 or payload[signal.name] == 'NONE':
                 pass
             else:
+                print(payload)
+                self.axis_state[str(axis_id)] = payload['Axis_State']
                 return payload
         return None
     
-    def Get_Encoder_Estimates(self, payload):
+    def _Get_Encoder_Estimates(self, axis_id, payload):
+        encoder_info = {}
         if 'Vel_Estimate' in payload:
-            self.encoder_info['Vel_Estimate'] = payload['Vel_Estimate']
+            encoder_info['Vel_Estimate'] = payload['Vel_Estimate']
         else:
             raise ValueError
         if 'Pos_Estimate' in payload:
-            self.encoder_info['Pos_Estimate'] = payload['Pos_Estimate']
+            encoder_info['Pos_Estimate'] = payload['Pos_Estimate']
         else:
             raise ValueError
+        self.encoder_info[str(axis_id)] = encoder_info

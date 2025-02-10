@@ -144,6 +144,7 @@ class OdriveEncode(CanWrapperEncode):
         
     def joint2axis(self, joint):
         # convert input str joint into axises number reading the yaml dct
+        ''' need test '''
         if self.use_jointconfig == True:
             return self.axis[joint]
         else:
@@ -151,8 +152,7 @@ class OdriveEncode(CanWrapperEncode):
             return joint
 
 
-# can.Message(timestamp=0.0, arbitration_id=0x21, is_extended_id=False, dlc=8, data=[0x0, 0x0, 0x0, 0x0, 0x3, 0x0, 0x0, 0x0])
-# can.Message(timestamp=0.0, arbitration_id=0x23, is_extended_id=False, dlc=8, data=[0x1, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0])
+
 class OdriveDecode(CanWrapperDecode):
     def __init__(self, dbc_filepath,  use_jointconfig: Optional[bool] = True,
                  mapping_config: Optional[dict] = {'FrontLeftMotor': 1,'MiddleLeftMotor': 2 ,'BackLeftMotor': 3, 'FrontRightMotor': 4, 'MiddleRightMotor': 5, 'BackRightMotor': 6}):
@@ -178,6 +178,7 @@ class OdriveDecode(CanWrapperDecode):
         return self.encoder_info
             
     def axis2joint(self, axis):
+        ''' need test'''
         if self.use_jointconfig == True:
             name = [name for name, value in self.axis.items() if name == axis]
             assert len(name) == 1

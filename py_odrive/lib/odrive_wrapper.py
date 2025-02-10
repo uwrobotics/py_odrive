@@ -198,8 +198,10 @@ class OdriveDecode(CanWrapperDecode):
         elif cmd.name == 'Get_Encoder_Estimates':
             self.Get_Encoder_Estimates(payload)
             return None
-        else: 
+        elif cmd.name in ['Get_Motor_Error', 'Get_Encoder_Error', 'Get_Sensorless_Error', 'Get_Encoder_Count', 'Get_Iq', 'Get_Sensorless_Estimates', 'Get_Bus_Voltage_Current', 'Get_ADC_Voltage', 'Get_Controller_Error']:
             return cmd.name, {str(joint): payload}
+        else: 
+            return None
             
     def Heartbeat(self, axis_id, cmd, payload):
         for signal in cmd.signals:

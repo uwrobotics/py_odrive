@@ -16,10 +16,6 @@ def AXIS_STATE_FULL_CALIBRATION_SEQUENCE_CMD():
     return can.Message(timestamp=0.0, arbitration_id=0xc7, is_extended_id=False, dlc=8, data=[0x3, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0])
 
 @pytest.fixture
-def AXIS_STATE_FULL_CALIBRATION_SEQUENCE_CMD():
-    return n
-
-@pytest.fixture
 def axisID():
     return 6
 
@@ -45,5 +41,3 @@ def test_decode_axis_calibration(dbc_db, axisID, AXIS_STATE_FULL_CALIBRATION_SEQ
     msg = dbc_db.get_message_by_name('Set_Axis_State')
     assert AXIS_STATE_FULL_CALIBRATION_SEQUENCE_CMD.arbitration_id == msg.frame_id | axisID << 5
     assert dbc_db.decode_message('Set_Axis_State', AXIS_STATE_FULL_CALIBRATION_SEQUENCE_CMD.data)['Axis_Requested_State'] == 'FULL_CALIBRATION_SEQUENCE'
-    
-def test_encode_set_limit()

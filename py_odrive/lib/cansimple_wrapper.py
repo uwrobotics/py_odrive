@@ -17,21 +17,39 @@ class CanWrapperEncode:
         self.db = cantools.database.load_file(dbc_filepath)
         self.encode_arbitration_id = lambda axis_id, msg_id: axis_id << 5 | msg_id
     
-    def _encode(self, axis_id, cmd: str, payload: Optional[dict]):
+    def _encode(self, axis_id, cmd: str, payload: Optional[dict] = None, rtr: Optional[bool]=False):
+        '''
+        condition 1:
+            Set_Reboot / Estop
+        Condition 2:
+            Get odrive state
+        '''
         msg = self.db.get_message_by_name(cmd)
+        data = {}
         if msg.length == 0:
             assert payload is None
-        data = self._encode_payload(msg, payload)
-        return can.Message(arbitration_id=self.encode_arbitration_id(axis_id, msg.frame_id), is_extended_id=False, data=data)
+        elif msg.receivers == {'Master'}:
+            assert rtr == True
+        else:
+            data = msg.encode(self._encode_payload(msg, payload))
+        return can.Message(arbitration_id=self.encode_arbitration_id(axis_id, msg.frame_id), is_extended_id=False, is_remote_frame = rtr, data=data)
             
     def _encode_payload(self, msg, payload):
+        '''
+        Payload accept string or numbers check existence before assignment
+        '''
         dct = {}
         for signal in msg.signals:
             try:
+                if signal.choices is not None:
+                    assert payload[signal.name] in signal.choices.values() or payload[signal.name] in signal.choices
+                else:
+                    assert isinstance(payload[signal.name], int)
                 dct[signal.name] = payload[signal.name]
             except KeyError:
-                dct[signal.name] = 0
+                raise ValueError
+                # dct[signal.name] = 0
                 # log instance
-        return msg.encode(dct)
+        return dct
     
     

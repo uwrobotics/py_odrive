@@ -2,8 +2,7 @@
 
 Todo:
 
-- Decode function
-- Main function demo
+- Main function demo <Optional>
 - Lifecycle
 - ROS Message communication
 - LCM communication
@@ -14,7 +13,6 @@ Todo:
 ## Lifecycle:
 
 * on\_configure: calibration of direction testing
-
 * on\_activate: configure control mode & action
 * on\_deactivate: clear_error/ reboot
 

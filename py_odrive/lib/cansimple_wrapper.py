@@ -52,4 +52,18 @@ class CanWrapperEncode:
                 # log instance
         return dct
     
-    
+
+
+class CanWrapperDecode:
+    def __init__(self, dbc_filepath):
+        self.db = cantools.database.load_file(dbc_filepath)
+        self.get_axis_id = lambda buf: buf.arbitration_id >> 5
+        self.get_frame_id = lambda buf: buf.arbitration_id & 0x11111
+        
+    def decode_message(self, buf):
+        '''
+        return axis_id(int), frame_id(int), message(dict)
+        '''
+        axis_id = self.get_axis_id(buf)
+        frame_id = self.get_frame_id(buf)
+        return axis_id, frame_id, self.db.decode_message(frame_id, buf.data)

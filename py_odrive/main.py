@@ -1,6 +1,6 @@
 import rclpy
-from rclpy.lifecycle import LifecycleNode
-from rclpy.lifecycle import TransitionCallbackReturn
+from ros2_lifecycle_py.lifecycle import LifecycleNode
+from ros2_lifecycle_py.lifecycle import TransitionCallbackReturn
 from rclpy.executors import SingleThreadedExecutor
 
 

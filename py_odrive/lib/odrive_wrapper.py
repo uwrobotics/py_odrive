@@ -1,4 +1,4 @@
-from .cansimple_wrapper import CanWrapperEncode
+from .cansimple_wrapper import CanWrapperEncode, CanWrapperDecode
 from typing import Optional
 
 '''
@@ -149,3 +149,48 @@ class OdriveEncode(CanWrapperEncode):
         else:
             assert isinstance(joint, int)
             return joint
+
+
+# can.Message(timestamp=0.0, arbitration_id=0x21, is_extended_id=False, dlc=8, data=[0x0, 0x0, 0x0, 0x0, 0x3, 0x0, 0x0, 0x0])
+
+class OdriveDecode(CanWrapperDecode):
+    def __init__(self, dbc_filepath,  use_jointconfig: Optional[bool] = True,
+                 mapping_config: Optional[dict] = {'FrontLeftMotor': 1,'MiddleLeftMotor': 2 ,'BackLeftMotor': 3, 'FrontRightMotor': 4, 'MiddleRightMotor': 5, 'BackRightMotor': 6}):
+        super().__init__(dbc_filepath)
+        self.use_jointconfig = use_jointconfig
+        '''support reading the config file'''
+        if self.use_jointconfig == True:
+            assert mapping_config is not None
+            self.axis = mapping_config
+        self.axis_state = {}
+            
+    def get_axis_state(self):
+        '''
+        update every 5 sec
+        '''
+        return self.axis_state
+            
+    def axis2joint(self, axis):
+        if self.use_jointconfig == True:
+            name = [name for name, value in self.axis.items() if name == axis]
+            assert len(name) == 1
+            return name[0]
+        else:
+            assert isinstance(axis, int)
+            return axis
+        
+    def decode_message(self, buf):
+        axis_id, cmd, payload = super().decode_message(buf)
+        joint = self.axis2joint(axis_id)
+        if cmd.name == 'Heartbeat':
+            return {str(joint): self.Heartbeat(joint, cmd, payload)}
+            
+    def Heartbeat(self, axis_id, cmd, payload):
+        for signal in cmd.signals:
+            if signal.name == 'Axis_State':
+                self.axis_state[str(axis_id)] = payload[signal.name]
+            elif payload[signal.name] == 0:
+                pass
+            else:
+                return payload
+        return None

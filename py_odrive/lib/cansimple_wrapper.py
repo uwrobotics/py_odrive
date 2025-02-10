@@ -66,4 +66,4 @@ class CanWrapperDecode:
         '''
         axis_id = self.get_axis_id(buf)
         frame_id = self.get_frame_id(buf)
-        return axis_id, frame_id, self.db.decode_message(frame_id, buf.data)
+        return axis_id, self.db.get_message_by_frame_id(frame_id), self.db.decode_message(frame_id, buf.data)

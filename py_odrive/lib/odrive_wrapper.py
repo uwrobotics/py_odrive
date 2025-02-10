@@ -152,7 +152,7 @@ class OdriveEncode(CanWrapperEncode):
 
 
 # can.Message(timestamp=0.0, arbitration_id=0x21, is_extended_id=False, dlc=8, data=[0x0, 0x0, 0x0, 0x0, 0x3, 0x0, 0x0, 0x0])
-
+# can.Message(timestamp=0.0, arbitration_id=0x23, is_extended_id=False, dlc=8, data=[0x1, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0])
 class OdriveDecode(CanWrapperDecode):
     def __init__(self, dbc_filepath,  use_jointconfig: Optional[bool] = True,
                  mapping_config: Optional[dict] = {'FrontLeftMotor': 1,'MiddleLeftMotor': 2 ,'BackLeftMotor': 3, 'FrontRightMotor': 4, 'MiddleRightMotor': 5, 'BackRightMotor': 6}):
@@ -163,12 +163,19 @@ class OdriveDecode(CanWrapperDecode):
             assert mapping_config is not None
             self.axis = mapping_config
         self.axis_state = {}
+        self.encoder_info = {'Vel_Estimate': 0, 'Pos_Estimate': 0}
             
     def get_axis_state(self):
         '''
         update every 5 sec
         '''
         return self.axis_state
+    
+    def get_encoder_est(self):
+        '''
+        impl graph plot?
+        '''
+        return self.encoder_info
             
     def axis2joint(self, axis):
         if self.use_jointconfig == True:
@@ -183,14 +190,33 @@ class OdriveDecode(CanWrapperDecode):
         axis_id, cmd, payload = super().decode_message(buf)
         joint = self.axis2joint(axis_id)
         if cmd.name == 'Heartbeat':
-            return {str(joint): self.Heartbeat(joint, cmd, payload)}
+            msg = self.Heartbeat(joint, cmd, payload)
+            if msg != None:
+                return cmd.name, {str(joint): msg}
+            else:
+                return None
+        elif cmd.name == 'Get_Encoder_Estimates':
+            self.Get_Encoder_Estimates(payload)
+            return None
+        else: 
+            return cmd.name, {str(joint): payload}
             
     def Heartbeat(self, axis_id, cmd, payload):
         for signal in cmd.signals:
             if signal.name == 'Axis_State':
-                self.axis_state[str(axis_id)] = payload[signal.name]
+                self.axis_state[str(axis_id)] = payload['Axis_State']
             elif payload[signal.name] == 0:
                 pass
             else:
                 return payload
         return None
+    
+    def Get_Encoder_Estimates(self, payload):
+        if 'Vel_Estimate' in payload:
+            self.encoder_info['Vel_Estimate'] = payload['Vel_Estimate']
+        else:
+            raise ValueError
+        if 'Pos_Estimate' in payload:
+            self.encoder_info['Pos_Estimate'] = payload['Pos_Estimate']
+        else:
+            raise ValueError

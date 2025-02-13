@@ -20,7 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'odrive_controller_node = py_odrive.main:main',
+            'msg_server = py_odrive.main:main'
         ],
     },
 )

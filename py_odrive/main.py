@@ -1,6 +1,8 @@
-from uwrt_ros_msg.msg import OdriveCmd
+from uwrt_ros_msg.msg import OdriveCmd, MsgResponse
 import rclpy
 from rclpy.node import Node
+import datetime
+
 
 class OdriveMsgSubscriber(Node):
 
@@ -12,6 +14,11 @@ class OdriveMsgSubscriber(Node):
             self.odrive_cmd_callback,
             10  # QoS history depth
         )
+        self.publisher_ = self.create_publisher(
+            MsgResponse,
+            'MsgResponse',
+            10  # QoS history depth
+        )
         # Prevent unused variable warning.
         self.subscription
 
@@ -21,6 +28,16 @@ class OdriveMsgSubscriber(Node):
         print("Command:", msg.cmd)
         print("Payload:", msg.payload)
 
+        status = True
+        self.publish(status)
+        
+    def publish(self, status):
+        msg = MsgResponse()
+        msg.status = status
+        msg.timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        self.publisher_.publish(msg)
+        print(f'Response: {msg.status} timestamp: {msg.timestamp}')
+        
 
 def main():
     rclpy.init()

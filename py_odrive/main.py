@@ -33,10 +33,8 @@ class OdriveMsgSubscriber(Node):
         msg = MsgResponse()
         msg.status = status
         msg.timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        
         self.publisher_.publish(msg)
-        
-        self.get_logger().info('Publishing: "%s" "%s"' % str(msg.status) % msg.timestamp)
+        print(f'Response: {msg.status} timestamp: {msg.timestamp}')
         
 
 

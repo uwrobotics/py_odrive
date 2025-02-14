@@ -1,1 +1,19 @@
-# Todo migrate reference on https://github.com/odriverobotics/ODrive/blob/master/tools/can_dbc_example.py
+# Jetson orin nano
+Drivetrain:
+ interface: slcan
+ channel: /dev/ttyACM0
+ bitrate: 500000
+ mapping:
+  FrontLeftMotor: 1
+  MiddleLeftMotor: 2
+  BackLeftMotor: 3
+  FrontRightMotor: 4
+  MiddleRightMotor: 5
+  BackRightMotor: 6
+
+# Linux laptop 
+# Drivetrain2:
+#  bustype: slcan
+#  channel: /dev/ttyACM1
+#  bitrate: 500000
+

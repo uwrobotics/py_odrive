@@ -3,6 +3,7 @@ import rclpy
 from rclpy.node import Node
 import datetime
 
+
 class OdriveMsgSubscriber(Node):
 
     def __init__(self):
@@ -26,6 +27,7 @@ class OdriveMsgSubscriber(Node):
         print("Axis ID:", msg.axis_id)
         print("Command:", msg.cmd)
         print("Payload:", msg.payload)
+
         status = True
         self.publish(status)
         
@@ -36,7 +38,6 @@ class OdriveMsgSubscriber(Node):
         self.publisher_.publish(msg)
         print(f'Response: {msg.status} timestamp: {msg.timestamp}')
         
-
 
 def main():
     rclpy.init()

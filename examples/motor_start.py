@@ -3,7 +3,8 @@ import time
 import sys
 
 # Setting import path
-sys.path.append('../py_odrivegit ')
+
+sys.path.append('../py_odrive')
 from py_odrive.lib.odrive_wrapper import OdriveEncode
 from py_odrive.lib.utils import ProcessYaml, CanDevice
 

@@ -26,25 +26,3 @@ class OdriveV3:
                 self.buses_config[device] = self.devices_config.get_config(key='mapping',device_name=device)
             except OSError:
                 self.buses[device] =  utils.CanDevice(None , 'offline')
-                
-    def get_device(self):
-        pass
-
-    def transmit(self, device, msg):
-        assert self.buses[device].get_status(), f'can device {self.buses[device]} is not online at the moment'
-        assert msg.msg_ready, f'Message to {device} is not prepared'
-        self.buses[device].send(msg.buf)
-        
-    def recv(self):
-        for bus in self.buses:
-            self._recv(bus):
-                
-        
-    # async listen private method
-    def _recv(self, can_bus):
-        can_bus.recv()
-        
-    
-    
-    
-    

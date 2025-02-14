@@ -1,7 +1,12 @@
-from py_odrive.lib.odrive_wrapper import OdriveEncode
-from py_odrive.lib.utils import ProcessYaml, CanDevice
 import can
 import time
+import sys
+
+# Setting import path
+sys.path.append('../py_odrive')
+from py_odrive.lib.odrive_wrapper import OdriveEncode
+from py_odrive.lib.utils import ProcessYaml, CanDevice
+
 
 config = ProcessYaml('config/config.yaml')
 interface = config.get_config(key='interface', device_name='Drivetrain')

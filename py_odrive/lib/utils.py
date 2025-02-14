@@ -39,10 +39,7 @@ class CanDevice:
         Args:
             status (str): The new status ('online' or 'offline'). Defaults to 'offline'.
         """
-        if status == 'online':
-            self.status = status
-        else:
-            self.status = 'offline'
+        self.status = status if status == 'online' else 'offline'
 
     def get_status(self) -> str:
         """
@@ -68,7 +65,7 @@ class ProcessYaml:
         Args:
             config_file (str): Path to the YAML configuration file.
         """
-        self.read_config(config_file)
+        self.yaml_obj = self.read_config(config_file)
 
     def get_config(self, key: Optional[str] = None, device_name: Optional[str] = None, dct: Optional[dict] = None) -> Optional[any]:
         """
@@ -89,10 +86,8 @@ class ProcessYaml:
             return self.yaml_obj
         if (dct is None) == (device_name is None):
             raise ValueError("Either `device_name` or `dct` must be provided, but not both.")
-        if dct is None:
-            return self._safe_access(self.yaml_obj[device_name], key)
-        else:
-            return self._safe_access(dct, key)
+        
+        return self._safe_access(self.yaml_obj[device_name] if dct is None else dct, key)
 
     def _safe_access(self, dct: dict, key: any) -> Optional[any]:
         """
@@ -105,25 +100,25 @@ class ProcessYaml:
         Returns:
             Optional[any]: The value associated with the key or None if the key is not found.
         """
-        try:
-            return dct[key]
-        except KeyError:
-            return None
+        return dct.get(key, None)
 
-    def read_config(self, config_file: str):
+    def read_config(self, config_file: str) -> dict:
         """
         Reads and parses the YAML configuration file.
 
         Args:
             config_file (str): Path to the YAML configuration file.
 
+        Returns:
+            dict: The parsed YAML configuration.
+
         Raises:
             TypeError: If the YAML file contains a list at the root level.
         """
         with open(config_file, mode='r', encoding="utf-8") as file:
-            self.yaml_obj = yaml.safe_load(file)
+            yaml_obj = yaml.safe_load(file)
+
+        if not isinstance(yaml_obj, dict):
+            raise TypeError("YAML file should contain key-value mappings, not a list.")
         
-        # YAML file content sanity check
-        for item in self.yaml_obj.values():
-            if isinstance(item, list):
-                raise TypeError("YAML file contains a list at the root level, which is not supported.")
+        return yaml_obj

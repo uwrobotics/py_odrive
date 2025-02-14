@@ -1,14 +1,6 @@
 from .cansimple_wrapper import CanWrapperEncode, CanWrapperDecode
 from typing import Optional
 
-'''
-Need unit testing
-for sunday integration testing will write a main fn in example folder
-this node need lifetime management
-onconfigure(FULL_SEQUENCE_CALIBRATION)
-during operation(Check the current mode -> send set vel command)
-'''
-
 class OdriveEncode(CanWrapperEncode):
     def __init__(self, dbc_filepath, use_jointconfig: Optional[bool] = True, 
                  mapping_config: Optional[dict] = {'FrontLeftMotor': 1,'MiddleLeftMotor': 2 ,'BackLeftMotor': 3, 'FrontRightMotor': 4, 'MiddleRightMotor': 5, 'BackRightMotor': 6}):

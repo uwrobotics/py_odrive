@@ -4,25 +4,24 @@ import rclpy
 from rclpy.node import Node
 
 
-class MinimalService(Node):
+class OdriveMsgService(Node):
 
     def __init__(self):
-        super().__init__('minimal_service')
+        super().__init__('odrive_msg_service')
         self.srv = self.create_service(OdriveCmd, 'OdriveCmd', self.odrive_cmd_callback)
 
     def odrive_cmd_callback(self, request, response):
         print(request.axis_id, request.cmd, request.payload)
         response.status = True
-
         return response
 
 
 def main():
     rclpy.init()
 
-    minimal_service = MinimalService()
+    msg_service = OdriveMsgService()
 
-    rclpy.spin(minimal_service)
+    rclpy.spin(msg_service)
 
     rclpy.shutdown()
 

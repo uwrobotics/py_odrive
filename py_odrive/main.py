@@ -30,19 +30,20 @@ class OdriveMsgSubscriber(Node):
 
     def can_setup(self):
         # Read Yaml Config
-        yaml_dct = ProcessYaml('../config/config.yaml')
-        dct_key = yaml_dct.get_config().keys()
+        self.yaml_dct = ProcessYaml('../config/config.yaml')
+        self.get_config = lambda key, description: self.yaml_dct.get_config(key=key, device_name=description)
+        dct_key = self.yaml_dct.get_config().keys()
         device_annotation = {}
         for description in dct_key:
             try:
-                interface = yaml_dct.get_config(key='interface', device_name=description)
-                channel = yaml_dct.get_config(key='channel', device_name=description)
-                bitrate = yaml_dct.get_config(key='bitrate', device_name=description)
+                interface = self.get_config('interface', description)
+                channel = self.get_config('channel', description)
+                bitrate = self.get_config('bitrate', description)
                 bus = can.interface.Bus(interface=interface, channel=channel, bitrate=bitrate)
-                device_annotation[description] = yaml_dct.get_config(key='mapping', device_name=description)
-            except CanError:
+                device_annotation[description] = self.yaml_dct.get_config(key='mapping', device_name=description)
+            except can.CanError:
                 pass
-            #log the result
+            # Create result into CanInstance Object
     
     def odrive_cmd_callback(self, msg):
         # Print the received message fields.

@@ -3,6 +3,7 @@ from rclpy.node import Node
 
 import datetime
 import os
+print(os.getcwd())
 import can
 
 from py_odrive.lib.utils import CanDevice, ProcessYaml

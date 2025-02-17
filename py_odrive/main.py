@@ -7,7 +7,7 @@ import sys
 sys.path.append(os.path.join(os.getcwd(), 'UWRT_Controller_StateMachine', 'py_odrive'))
 import can
 
-from py_odrive.lib.utils import CanDevice, ProcessYaml
+from py_odrive.py_odrive.lib.utils import CanDevice, ProcessYaml
 
 from uwrt_ros_msg.msg import OdriveCmd, MsgResponse
 

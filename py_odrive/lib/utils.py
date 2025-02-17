@@ -49,6 +49,9 @@ class CanDevice:
             str: The current status ('online' or 'offline').
         """
         return self.status
+    
+    def __repr__(self):
+        return f'{self.bus} -> {self.status}'
 
 
 class ProcessYaml:

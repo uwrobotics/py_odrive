@@ -4,10 +4,10 @@ from rclpy.node import Node
 import datetime
 import os
 import sys
-sys.path.append(os.path.join(os.getcwd(), 'UWRT_Controller_StateMachine', 'py_odrive'))
+sys.path.append(os.path.join(os.getcwd(), 'UWRT_Controller_StateMachine', 'py_odrive', 'py_odrive'))
 import can
 
-from py_odrive.py_odrive.lib.utils import CanDevice, ProcessYaml
+from lib.utils import CanDevice, ProcessYaml
 
 from uwrt_ros_msg.msg import OdriveCmd, MsgResponse
 
@@ -33,8 +33,8 @@ class OdriveMsgSubscriber(Node):
 
     def can_setup(self):
         # Read Yaml Config
-        assert(os.getcwd() == '/home/uwrt/code_ws/py_odrive/py_odrive'), f'{os.getcwd()}'
-        self.yaml_dct = ProcessYaml('./config/config.yaml')
+        assert(os.getcwd() == '/home/uwrt/code_ws'), f'{os.getcwd()}'
+        self.yaml_dct = ProcessYaml(os.path.join(os.getcwd(), 'UWRT_Controller_StateMachine', 'py_odrive', 'config','config.yaml'))
         self.get_config = lambda key, description: self.yaml_dct.get_config(key=key, device_name=description)
         dct_key = self.yaml_dct.get_config().keys()
         self.device_instance = {}

@@ -28,7 +28,7 @@ class OdriveMsgSubscriber(Node):
             'MsgResponse',
             10  # QoS history depth
         )
-        can_setup()
+        self.can_setup()
         self.subscription
 
     def can_setup(self):

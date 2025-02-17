@@ -3,6 +3,7 @@ from rclpy.node import Node
 
 import datetime
 import os
+import sys
 sys.path.append(os.path.join(os.getcwd(), 'UWRT_Controller_StateMachine', 'py_odrive'))
 import can
 

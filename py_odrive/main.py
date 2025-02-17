@@ -33,7 +33,7 @@ class OdriveMsgSubscriber(Node):
 
     def can_setup(self):
         # Read Yaml Config
-        assert(os.getcwd() == '/home/uwrt/code_ws'), f'{os.getcwd()}'
+        assert(os.getcwd() == '/home/uwrt/ros_ws'), f'{os.getcwd()}'
         self.yaml_dct = ProcessYaml(os.path.join(os.getcwd(), 'UWRT_Controller_StateMachine', 'py_odrive', 'config','config.yaml'))
         self.get_config = lambda key, description: self.yaml_dct.get_config(key=key, device_name=description)
         dct_key = self.yaml_dct.get_config().keys()

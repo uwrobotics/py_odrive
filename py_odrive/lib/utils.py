@@ -12,7 +12,7 @@ class CanDevice:
         status (str): The current status of the CAN device ('online' or 'offline').
     """
 
-    def __init__(self, can_device: str, status: str = 'offline'):
+    def __init__(self, can_device, status: str = 'offline'):
         """
         Initializes the CanDevice instance.
 

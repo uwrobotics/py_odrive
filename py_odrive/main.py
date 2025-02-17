@@ -26,23 +26,30 @@ class OdriveMsgSubscriber(Node):
             'MsgResponse',
             10  # QoS history depth
         )
+        can_setup()
         self.subscription
 
     def can_setup(self):
         # Read Yaml Config
-        self.yaml_dct = ProcessYaml('../config/config.yaml')
+        assert(os.getcwd() == '/home/uwrt/code_ws/py_odrive/py_odrive'), f'{os.getcwd()}'
+        self.yaml_dct = ProcessYaml('./config/config.yaml')
         self.get_config = lambda key, description: self.yaml_dct.get_config(key=key, device_name=description)
         dct_key = self.yaml_dct.get_config().keys()
-        device_annotation = {}
+        self.device_instance = {}
+        self.device_mapping = {}
         for description in dct_key:
             try:
                 interface = self.get_config('interface', description)
                 channel = self.get_config('channel', description)
                 bitrate = self.get_config('bitrate', description)
                 bus = can.interface.Bus(interface=interface, channel=channel, bitrate=bitrate)
-                device_annotation[description] = self.yaml_dct.get_config(key='mapping', device_name=description)
+                device = CanDevice(bus, status = 'online')
+                self.device_instance[description] = device
+                self.device_mapping[description] = self.yaml_dct.get_config(key='mapping', device_name=description)
             except can.CanError:
-                pass
+                device = CanDevice(None)
+                self.device_instance[description] = device
+                self.device_mapping[description] = None
             # Create result into CanInstance Object
     
     def odrive_cmd_callback(self, msg):

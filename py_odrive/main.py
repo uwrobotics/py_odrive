@@ -3,7 +3,7 @@ from rclpy.node import Node
 
 import datetime
 import os
-sys.path.append(os.path.join(os.getcwd(), 'UWRT_Controller_StateMachine', 'py_odrive')
+sys.path.append(os.path.join(os.getcwd(), 'UWRT_Controller_StateMachine', 'py_odrive'))
 import can
 
 from py_odrive.lib.utils import CanDevice, ProcessYaml

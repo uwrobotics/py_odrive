@@ -5,7 +5,7 @@ import datetime
 import os
 import can
 
-from lib.utils import CanDevice, ProcessYaml
+from py_odrive.lib.utils import CanDevice, ProcessYaml
 
 from uwrt_ros_msg.msg import OdriveCmd, MsgResponse
 

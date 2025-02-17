@@ -52,6 +52,8 @@ class OdriveMsgSubscriber(Node):
                 device = CanDevice(None)
                 self.device_instance[description] = device
                 self.device_mapping[description] = None
+        print('device description: ', self.device_instance)
+        print('device mapping: ', self.device_mapping)
             # Create result into CanInstance Object
     
     def odrive_cmd_callback(self, msg):

@@ -9,8 +9,8 @@ import can
 import json
 from std_msgs.msg import String
 
-from .lib.utils import CanDevice, ProcessYaml
-from .lib.odrive_wrapper import OdriveEncode
+from lib.utils import CanDevice, ProcessYaml
+from lib.odrive_wrapper import OdriveEncode
 
 from uwrt_ros_msg.msg import OdriveCmd, MsgResponse
 

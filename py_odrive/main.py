@@ -6,8 +6,11 @@ import os
 import sys
 sys.path.append(os.path.join(os.getcwd(), 'UWRT_Controller_StateMachine', 'py_odrive', 'py_odrive'))
 import can
+import json
+from std_msgs.msg import String
 
-from lib.utils import CanDevice, ProcessYaml
+from .lib.utils import CanDevice, ProcessYaml
+from .lib.odrive_wrapper import OdriveEncode
 
 from uwrt_ros_msg.msg import OdriveCmd, MsgResponse
 
@@ -17,7 +20,7 @@ class OdriveMsgSubscriber(Node):
     def __init__(self):
         super().__init__('odrive_msg_subscriber')
         # Ros Messenger setup
-        self.subscription = self.create_subscription(
+        self.subscription_ = self.create_subscription(
             OdriveCmd,
             'OdriveCmd',
             self.odrive_cmd_callback,
@@ -28,13 +31,20 @@ class OdriveMsgSubscriber(Node):
             'MsgResponse',
             10  # QoS history depth
         )
-        self.init_publisher_ = self.create_publisher(
-            OdriveCmd,
-            'DeviceInit',
+        self.json_publisher_ = self.create_publisher(
+            String,
+            'OdriveJsonPub',
+            10  # QoS history depth
+        )
+        self.json_subscription_ = self.create_subscription(
+            String,
+            'OdriveJsonSub',
+            self.json_callback,
             10  # QoS history depth
         )
         self.can_setup()
-        self.subscription
+        self.subscription_
+        self.json_subscription_
 
     def can_setup(self):
         """Setup CAN devices using the configuration from a YAML file."""
@@ -90,7 +100,7 @@ class OdriveMsgSubscriber(Node):
     def odrive_cmd_callback(self, msg):
         # Print the received message fields.
         print("Description: ", msg.description)
-        print("Axis ID:", msg.axis_id)
+        print("Axis ID: msg.axis_id")
         print("Command:", msg.cmd)
         print("Payload:", msg.payload)
         if msg.description == 'None':
@@ -98,21 +108,17 @@ class OdriveMsgSubscriber(Node):
         else:
             status = True
             self.status_publish(status)
-    
-    def init_publish(self):
-        msg = OdriveCmd()
-        msg.description = ','.join(self.device_instance.keys())
-        axis_id = ''
-        for key in self.device_instance.keys():
-            axis_id += key
-            axis_id += ':'
-            axis_id += ','.join(self.device_mapping[key])
-            axis_id += ';'
-        msg.axis_id = axis_id
-        msg.cmd = 'None'
-        msg.payload = 'None'
-        self.init_publisher_.publish(msg)
-        print(f'description: {msg.description} axis_id: {msg.axis_id}')
+            
+    def json_callback(self, msg):
+        json_dct = json.load(msg.data)
+        confirm = {}
+        if 'stage' in json_dct and 'type' in json_dct:
+            if json_dct['stage'] == 'Init' and json_dct['type'] == 'Request':
+                print('Received Request')
+                confirm["Status"] = "Init"
+                confirm["Response"] == "Success"
+        print(json.dump(confirm))
+        self.json_publisher_(json.dump(confirm))
         
     def status_publish(self, status):
         msg = MsgResponse()

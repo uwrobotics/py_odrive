@@ -23,7 +23,7 @@ class CanDevice:
         self.bus = can_device
         self.toggle_status(status)
 
-    def get_bus(self) -> str:
+    def get_bus(self):
         """
         Returns the name of the CAN device.
 

@@ -3,15 +3,6 @@ Drivetrain:
  interface: slcan
  channel: /dev/ttyACM0
  bitrate: 500000
- mapping:
-  left:
-   - 1
-   - 2
-   - 3
-  right:
-   - 4
-   - 5
-   - 6
 
 # Linux laptop 
 # Drivetrain2:

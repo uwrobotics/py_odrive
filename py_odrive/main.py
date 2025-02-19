@@ -32,7 +32,6 @@ class OdriveMsgSubscriber(Node):
         )
         self.can_setup()
         self.db = OdriveEncode(os.path.join(os.getcwd(), 'UWRT_Controller_StateMachine', 'py_odrive', 'config/odrive-cansimple.dbc'), use_jointconfig = False)
-        self.subscription_
         self.json_subscription_
 
     def can_setup(self):

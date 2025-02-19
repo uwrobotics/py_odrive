@@ -77,7 +77,7 @@ class OdriveMsgSubscriber(Node):
         print('Device Instances:', self.device_instance)
             
     def json_callback(self, msg):
-        json_msg = json.load(msg.data)
+        json_msg = json.loads(msg.data)
         can_msg = []
         pending = False
         if 'Type' in json_msg:

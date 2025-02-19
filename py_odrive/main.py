@@ -85,15 +85,15 @@ class OdriveMsgSubscriber(Node):
                 raise RuntimeError(f'Expected working directory to be request')
             if 'Command' in json_msg:
                 if json_msg['Command'] == 'Set_Axis_State':
-                    for axis_id, command in json_msg['payload'].items():
+                    for axis_id, command in json_msg['Payload'].items():
                         can_msg.append(self.db.Set_Axis_State(int(axis_id), command))
                         if command == 'FULL_CALIBRATION_SEQUENCE':
                             pending = True
                 elif json_msg['Command'] == 'Set_Controller_Mode':
-                    for axis_id, command in json_msg['payload'].items():
+                    for axis_id, command in json_msg['Payload'].items():
                         can_msg.append(self.db.Set_Controller_Mode(int(axis_id), command['control_mode'], command['input_mode']))
                 elif json_msg['Command'] == 'Set_Input_Vel':
-                    for axis_id, command in json_msg['payload'].items():
+                    for axis_id, command in json_msg['Payload'].items():
                         can_msg.append(self.db.Set_Input_Vel(int(axis_id), command, 0, 0))
                 if 'Target' in json_msg:
                     bus = self.device_instance[json_msg['Target']].get_bus()

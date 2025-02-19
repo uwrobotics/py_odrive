@@ -83,7 +83,7 @@ class OdriveMsgSubscriber(Node):
         pending = False
         if 'Type' in json_msg:
             if json_msg['Type'] != 'request':
-                raise RuntimeError(f'Expected working directory to be request, got {json_msg['Type']}')
+                raise RuntimeError(f'Expected working directory to be request')
             if 'Command' in json_msg:
                 if json_msg['Command'] == 'Set_Axis_State':
                     for axis_id, command in json_msg['payload'].items():

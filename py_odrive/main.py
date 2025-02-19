@@ -102,7 +102,7 @@ class OdriveMsgSubscriber(Node):
             print(buf)
         if pending == True:
             time.sleep(20)
-        self.response_pub(json_msg['Stage'], json_msg['Target', 'Success'])
+        self.response_pub(json_msg['Stage'], json_msg['Target'], 'Success')
             
         
     def response_pub(self, stage, target, status):

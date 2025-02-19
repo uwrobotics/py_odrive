@@ -31,7 +31,7 @@ class OdriveMsgSubscriber(Node):
             10  # QoS history depth
         )
         self.can_setup()
-        self.db = OdriveEncode('config/odrive-cansimple.dbc', use_jointconfig = False)
+        self.db = OdriveEncode(os.path.join(os.getcwd(), 'UWRT_Controller_StateMachine', 'py_odrive', 'config/odrive-cansimple.dbc'), use_jointconfig = False)
         self.subscription_
         self.json_subscription_
 

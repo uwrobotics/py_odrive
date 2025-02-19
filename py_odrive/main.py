@@ -102,7 +102,7 @@ class OdriveMsgSubscriber(Node):
             if bus is not None:
                 bus.send(buf)
                 print(buf)
-        if pending == True:
+        if pending == Falsegi:
             time.sleep(20)
         self.response_pub(json_msg['Stage'], json_msg['Target'], 'Success')
             

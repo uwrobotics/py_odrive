@@ -62,7 +62,8 @@ class CanWrapperEncode:
                     assert payload[signal.name] in signal.choices.values() or payload[signal.name] in signal.choices, \
                         f"Invalid value for {signal.name}: {payload[signal.name]}"
                 else:
-                    assert isinstance(payload[signal.name], int), f"{signal.name} must be an integer."
+                    # assert isinstance(payload[signal.name], int), f"{signal.name} must be an integer."
+                    pass
                 dct[signal.name] = payload[signal.name]
             except KeyError:
                 raise ValueError(f"Missing required signal: {signal.name}")

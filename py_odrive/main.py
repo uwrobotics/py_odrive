@@ -40,8 +40,6 @@ class OdriveMsgSubscriber(Node):
         # Verify current working directory.
         expected_cwd = '/home/uwrt/ros_ws'
         current_cwd = os.getcwd()
-        if current_cwd != expected_cwd:
-            raise RuntimeError(f'Expected working directory to be {expected_cwd}, got {current_cwd}')
                 
         # Load YAML configuration.
         config_path = os.path.join(current_cwd, 'Drivetrain', 'py_odrive', 'config', 'config.yaml')

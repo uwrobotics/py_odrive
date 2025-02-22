@@ -99,7 +99,7 @@ class OdriveMsgSubscriber(Node):
         for buf in can_msg:
             if bus is not None:
                 bus.send(buf)
-                time.sleep(0.005)
+                time.sleep(0.01)
             print(buf)
         if pending == True:
             time.sleep(20)

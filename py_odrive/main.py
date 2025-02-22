@@ -1,6 +1,6 @@
 import os
 import sys
-sys.path.append(os.path.join(os.getcwd(), 'UWRT_Controller_StateMachine', 'py_odrive', 'py_odrive'))
+sys.path.append(os.path.join(os.getcwd(), 'Drivetrain', 'py_odrive', 'py_odrive'))
 import can
 import json
 import datetime
@@ -31,7 +31,7 @@ class OdriveMsgSubscriber(Node):
             10  # QoS history depth
         )
         self.can_setup()
-        self.db = OdriveEncode(os.path.join(os.getcwd(), 'UWRT_Controller_StateMachine', 'py_odrive', 'config/odrive-cansimple.dbc'), use_jointconfig = False)
+        self.db = OdriveEncode(os.path.join(os.getcwd(), 'Drivetrain', 'py_odrive', 'config/odrive-cansimple.dbc'), use_jointconfig = False)
         self.json_subscription_
 
     def can_setup(self):
@@ -44,7 +44,7 @@ class OdriveMsgSubscriber(Node):
             raise RuntimeError(f'Expected working directory to be {expected_cwd}, got {current_cwd}')
                 
         # Load YAML configuration.
-        config_path = os.path.join(current_cwd, 'UWRT_Controller_StateMachine', 'py_odrive', 'config', 'config.yaml')
+        config_path = os.path.join(current_cwd, 'Drivetrain', 'py_odrive', 'config', 'config.yaml')
         self.yaml_dct = ProcessYaml(config_path)
         def get_config(key, description):
             """Helper function to fetch configuration values."""

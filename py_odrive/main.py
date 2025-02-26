@@ -92,7 +92,7 @@ class OdriveMsgSubscriber(Node):
                         can_msg.append(self.db.Set_Controller_Mode(int(axis_id), command['control_mode'], command['input_mode']))
                 elif json_msg['Command'] == 'Set_Input_Vel':
                     for axis_id, command in json_msg['Payload'].items():
-                        if axis_id in ['2', '4']:
+                        if axis_id in ['2', '5']:
                             can_msg.append(self.db.Set_Input_Vel(int(axis_id), -float(command), 0))
                         else:
                             can_msg.append(self.db.Set_Input_Vel(int(axis_id), float(command), 0))
